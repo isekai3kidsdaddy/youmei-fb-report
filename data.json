@@ -8,6 +8,7 @@
   ],
   "trends": [
     {
+      "date": "2026-07-10",
       "period": "0703-0709",
       "youmei_followers": 30530,
       "youmei_posts": 5,
@@ -15,8 +16,7 @@
       "youmei_score": 6,
       "top_rival": "星采星和醫美",
       "top_rival_score": 7.2,
-      "competitors_collected": 4,
-      "date": "2026-07-10"
+      "competitors_collected": 4
     }
   ]
 }
