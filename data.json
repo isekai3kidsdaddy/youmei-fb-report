@@ -1,6 +1,11 @@
 {
   "archives": [
     {
+      "date": "2026-07-24",
+      "period": "0718-0724",
+      "url": "archive/2026-07-24.html"
+    },
+    {
       "date": "2026-07-17",
       "period": "0710-0716",
       "url": "archive/2026-07-17.html"
@@ -19,7 +24,7 @@
       "youmei_posts": 5,
       "youmei_avg_engagement": 2.6,
       "youmei_score": 6,
-      "top_rival": "星采星和醫美",
+      "top_rival": "æéæåé«ç¾",
       "top_rival_score": 7.2,
       "competitors_collected": 4
     },
@@ -29,10 +34,21 @@
       "youmei_posts": 4,
       "youmei_avg_engagement": 4,
       "youmei_score": 6.1,
-      "top_rival": "星采星和醫美",
+      "top_rival": "æéæåé«ç¾",
       "top_rival_score": 8.4,
       "competitors_collected": 4,
       "date": "2026-07-17"
+    },
+    {
+      "period": "0718-0724",
+      "youmei_followers": 30000,
+      "youmei_posts": 3,
+      "youmei_avg_engagement": 2,
+      "youmei_score": 6.1,
+      "top_rival": "英爵醫美",
+      "top_rival_score": 8,
+      "competitors_collected": 5,
+      "date": "2026-07-24"
     }
   ]
 }
