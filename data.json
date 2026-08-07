@@ -1,6 +1,11 @@
 {
   "archives": [
     {
+      "date": "2026-08-07",
+      "period": "0801-0807",
+      "url": "archive/2026-08-07.html"
+    },
+    {
       "date": "2026-08-03",
       "period": "0727-0802",
       "url": "archive/2026-08-03.html"
@@ -65,6 +70,17 @@
       "top_rival_score": 7.83,
       "competitors_collected": 8,
       "date": "2026-08-03"
+    },
+    {
+      "period": "0801-0807",
+      "youmei_followers": 30000,
+      "youmei_posts": 5,
+      "youmei_avg_engagement": 1,
+      "youmei_score": 5.29,
+      "top_rival": "星采星和醫美",
+      "top_rival_score": 7.29,
+      "competitors_collected": 6,
+      "date": "2026-08-07"
     }
   ]
 }
