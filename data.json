@@ -1,6 +1,11 @@
 {
   "archives": [
     {
+      "date": "2026-08-14",
+      "period": "0808-0814",
+      "url": "archive/2026-08-14.html"
+    },
+    {
       "date": "2026-08-07",
       "period": "0801-0807",
       "url": "archive/2026-08-07.html"
@@ -81,6 +86,17 @@
       "top_rival_score": 7.29,
       "competitors_collected": 6,
       "date": "2026-08-07"
+    },
+    {
+      "period": "0808-0814",
+      "youmei_followers": 30000,
+      "youmei_posts": 5,
+      "youmei_avg_engagement": 1.4,
+      "youmei_score": 4.4,
+      "top_rival": "林政賢皮膚科",
+      "top_rival_score": 8.6,
+      "competitors_collected": 41,
+      "date": "2026-08-14"
     }
   ]
 }
