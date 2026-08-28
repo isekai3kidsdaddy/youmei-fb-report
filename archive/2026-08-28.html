@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>悠美診所 vs 競業 ▎FB廣告週報儀表板 0821-0828</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+
+:root{
+  --youmei:#0E7C60; --rival:#1A3A5C; --gold:#9A6F0A;
+  --red:#8B2111; --sky:#1F6FA8; --purple:#5B2D8E;
+  --bg:#F2F5F9; --card:#FFF; --border:#D8DEE8;
+  --text:#1C2833; --muted:#6B7A8F; --green:#1D8348;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+     background:var(--bg);color:var(--text);font-size:13px;line-height:1.7}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#071520 0%,#0D2137 40%,#1A3A5C 75%,#1B5E8A 100%);
+  padding:44px 40px 36px; color:#fff; position:relative; overflow:hidden;
+}
+.hero::after{
+  content:""; position:absolute; right:-100px; bottom:-100px;
+  width:400px; height:400px; border-radius:50%;
+  background:radial-gradient(circle,rgba(14,124,96,.25),transparent 70%);
+}
+.hero-badge{
+  display:inline-block; background:rgba(14,124,96,.3);
+  border:1px solid rgba(14,124,96,.5); border-radius:20px;
+  padding:3px 14px; font-size:10.5px; letter-spacing:2px;
+  color:#7FDBCA; text-transform:uppercase; margin-bottom:12px;
+}
+.hero h1{font-size:26px;font-weight:900;line-height:1.3;margin-bottom:8px}
+.hero h1 .ym{color:#5EFFD6} .hero h1 .vs{color:#F4D03F;font-size:20px}
+.hero-sub{color:#AEC6D8;font-size:12.5px;margin-bottom:20px;max-width:700px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:12px}
+.hstat{background:rgba(255,255,255,.08);border-radius:10px;
+       padding:10px 18px;border:1px solid rgba(255,255,255,.12)}
+.hstat-val{font-size:22px;font-weight:900;color:#5EFFD6;line-height:1}
+.hstat-lbl{font-size:10px;color:#AEC6D8;margin-top:2px}
+
+/* ── NAV TABS ── */
+.tabs{background:#fff;border-bottom:2px solid var(--border);
+      position:sticky;top:0;z-index:100;
+      display:flex;gap:0;overflow-x:auto}
+.tab{padding:13px 22px;cursor:pointer;font-size:12.5px;font-weight:700;
+     color:var(--muted);border-bottom:3px solid transparent;
+     white-space:nowrap;transition:.15s;margin-bottom:-2px}
+.tab:hover{color:var(--rival)}
+.tab.active{color:var(--youmei);border-bottom-color:var(--youmei)}
+
+/* ── WRAP ── */
+.wrap{max-width:1200px;margin:0 auto;padding:28px 22px}
+.panel{display:none}.panel.active{display:block}
+
+/* ── SEC ── */
+.sec{font-size:15px;font-weight:900;border-left:5px solid var(--rival);
+     padding-left:12px;color:var(--rival);margin:32px 0 16px}
+.sec.ym{border-color:var(--youmei);color:var(--youmei)}
+.sec.r{border-color:var(--red);color:var(--red)}
+.sec.g{border-color:var(--gold);color:var(--gold)}
+.sec.s{border-color:var(--sky);color:var(--sky)}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:6px}
+.kpi{background:var(--card);border-radius:12px;padding:18px 14px;
+     border-top:4px solid var(--rival);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.kpi.ym{border-color:var(--youmei)} .kpi.r{border-color:var(--red)}
+.kpi.g{border-color:var(--gold)} .kpi.s{border-color:var(--sky)}
+.kv{font-size:26px;font-weight:900;color:var(--rival)}
+.kpi.ym .kv{color:var(--youmei)} .kpi.r .kv{color:var(--red)}
+.kpi.g .kv{color:var(--gold)} .kpi.s .kv{color:var(--sky)}
+.kl{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+/* ── ALERT ── */
+.alert{border-radius:10px;padding:13px 17px;margin:14px 0;
+       display:flex;gap:10px;font-size:12.5px;align-items:flex-start}
+.alert.warn{background:#FEF9E7;border-left:4px solid var(--gold)}
+.alert.ok{background:#EAFAF1;border-left:4px solid var(--green)}
+.alert.danger{background:#FDEDEC;border-left:4px solid var(--red)}
+.alert.info{background:#EBF5FB;border-left:4px solid var(--sky)}
+.alert .ico{font-size:17px;flex-shrink:0;margin-top:1px}
+.alert strong{display:block;font-weight:800;margin-bottom:2px}
+
+/* ── BUBBLE CHART (SVG) ── */
+.chart-wrap{background:var(--card);border-radius:14px;padding:24px;
+            box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:20px;
+            overflow:hidden}
+.chart-title{font-size:13px;font-weight:800;color:var(--rival);margin-bottom:16px}
+svg text{font-family:"Noto Sans TC","PingFang TC",sans-serif}
+
+/* ── BAR COMPARE ── */
+.bar-section{background:var(--card);border-radius:14px;padding:24px;
+             box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:16px}
+.bar-title{font-size:13px;font-weight:800;color:var(--rival);margin-bottom:14px}
+.bar-row{display:grid;grid-template-columns:140px 1fr 60px;
+         gap:10px;align-items:center;margin-bottom:9px}
+.bar-name{font-size:11.5px;font-weight:700;color:var(--text);text-align:right}
+.bar-name.ym{color:var(--youmei);font-size:12px}
+.bar-track{height:22px;background:#EBF5FB;border-radius:6px;overflow:hidden;
+           position:relative}
+.bar-fill{height:100%;border-radius:6px;transition:width .6s ease;
+          display:flex;align-items:center;padding-left:8px;
+          font-size:10.5px;color:#fff;font-weight:700;white-space:nowrap}
+.bar-val{font-size:11.5px;font-weight:700;color:var(--muted)}
+
+/* ── RADAR ── */
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+.radar-card{background:var(--card);border-radius:12px;padding:18px;
+            box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.radar-card h4{font-size:12.5px;font-weight:800;margin-bottom:12px;
+               padding-bottom:8px;border-bottom:2px solid var(--border)}
+.rc-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rc-lbl{width:72px;font-size:11px;color:var(--muted);flex-shrink:0;text-align:right}
+.rc-trk{flex:1;height:8px;background:#EBF5FB;border-radius:4px;overflow:hidden}
+.rc-fil{height:100%;border-radius:4px}
+.rc-val{width:26px;font-size:10.5px;font-weight:700;text-align:right}
+
+/* ── MATRIX TABLE ── */
+.mtbl{width:100%;border-collapse:collapse;background:var(--card);
+      border-radius:12px;overflow:hidden;
+      box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:14px;font-size:12px}
+.mtbl th{background:var(--rival);color:#fff;padding:10px 13px;
+         font-size:11.5px;text-align:center;white-space:nowrap}
+.mtbl th.ym{background:var(--youmei)}
+.mtbl td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:middle}
+.mtbl tr:last-child td{border-bottom:none}
+.mtbl tr:nth-child(even) td{background:#F8FBFF}
+.mtbl .cname{font-weight:700;color:var(--rival)}
+.mtbl .ym-row td{background:#E8F8F5!important;font-weight:700}
+.mtbl .ym-row .cname{color:var(--youmei)}
+tag{display:inline-block;padding:2px 7px;border-radius:10px;
+    font-size:10px;font-weight:700;margin:1px}
+tag.g{background:#D5F5E3;color:#1D8348}tag.r{background:#FADBD8;color:#7B241C}
+tag.y{background:#FEF9E7;color:#7D6608}tag.b{background:#D6EAF8;color:#154360}
+tag.p{background:#F0E6FF;color:#5B2D8E}tag.gr{background:#EAECEE;color:#5D6D7E}
+tag.tl{background:#D0F0EA;color:#0E7C60}
+
+/* ── PRO/CON CARDS ── */
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.pc-card{background:var(--card);border-radius:12px;padding:20px;
+         box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.pc-card h3{font-size:13px;font-weight:800;margin-bottom:12px;
+            display:flex;align-items:center;gap:7px}
+.pc-card ul{list-style:none}
+.pc-card ul li{padding:7px 0;border-bottom:1px dashed #EAF0F6;
+               font-size:12px;display:flex;gap:8px;align-items:flex-start}
+.pc-card ul li:last-child{border-bottom:none}
+.dot{width:18px;flex-shrink:0;font-weight:900;font-size:14px;margin-top:1px}
+.dot.g{color:var(--youmei)} .dot.r{color:var(--red)}
+.dot.y{color:var(--gold)} .dot.b{color:var(--sky)}
+
+/* ── REC CARDS ── */
+.rec-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.rec{background:var(--card);border-radius:12px;padding:18px 20px;
+     box-shadow:0 2px 8px rgba(0,0,0,.06);
+     display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:flex-start}
+.rn{width:44px;height:44px;border-radius:50%;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;font-weight:900;flex-shrink:0}
+.rn.r{background:var(--red)} .rn.g{background:var(--gold)} .rn.t{background:var(--youmei)}
+.rb h3{font-size:13px;font-weight:800;color:var(--rival);margin-bottom:4px}
+.rb p{font-size:12px;color:var(--muted);line-height:1.65}
+.rb .tip{background:#F0F4F8;border-radius:7px;padding:7px 11px;
+         font-size:11.5px;margin-top:7px}
+.pri{padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:800;
+     white-space:nowrap;align-self:flex-start}
+.p1{background:#FADBD8;color:var(--red)}.p2{background:#FEF9E7;color:var(--gold)}
+.p3{background:#D5F5E3;color:var(--youmei)}
+
+/* ── ADLINK ── */
+.adlink{display:inline-flex;align-items:center;gap:4px;
+        background:var(--rival);color:#fff;border-radius:6px;
+        padding:4px 9px;font-size:11px;font-weight:700;
+        text-decoration:none;white-space:nowrap}
+.adlink:hover{background:var(--sky)}
+.adlink.ym{background:var(--youmei)}
+
+/* ── SCORE BADGE ── */
+.score{display:inline-flex;align-items:center;justify-content:center;
+       width:32px;height:32px;border-radius:50%;font-size:12px;font-weight:900;
+       color:#fff;flex-shrink:0}
+.s-hi{background:var(--youmei)} .s-md{background:var(--gold)} .s-lo{background:var(--red)}
+
+footer{text-align:center;padding:28px;color:var(--muted);font-size:11px;
+       border-top:1px solid var(--border);margin-top:40px}
+@media(max-width:768px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .pc-grid,.radar-grid{grid-template-columns:1fr}
+  .rec{grid-template-columns:38px 1fr}.pri{display:none}
+  .tabs .tab{padding:10px 14px;font-size:11.5px}
+}
+
+.note{background:#F8FBFF;border:1px dashed var(--border);border-radius:10px;padding:12px 16px;font-size:11.5px;color:var(--muted);margin:12px 0}
+#hist-list li{margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">2026／08／28 ▎本週 FB 廣告情報週報</div>
+  <h1><span class="ym">悠美診所</span> <span class="vs">vs</span> 競業<br>臉書廣告對比分析儀表板（0821–0828）</h1>
+  <div class="hero-sub">本週實際重新蒐集：粉專規模、逐篇貼文、互動表現、醫師KOL化、CTA與廣告落地，並提出改善建議與行動清單</div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-val">7</div><div class="hstat-lbl">本週成功蒐集家數</div></div>
+    <div class="hstat"><div class="hstat-val">30,000</div><div class="hstat-lbl">悠美FB粉絲數</div></div>
+    <div class="hstat"><div class="hstat-val">4</div><div class="hstat-lbl">悠美本週貼文數</div></div>
+    <div class="hstat"><div class="hstat-val">1.25</div><div class="hstat-lbl">悠美平均互動/篇</div></div>
+    <div class="hstat"><div class="hstat-val">5.71</div><div class="hstat-lbl">悠美六維度均分</div></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="show('overview',this)">📊 本週總覽</div>
+  <div class="tab" onclick="show('rivals',this)">🔥 競業亮點</div>
+  <div class="tab" onclick="show('scores',this)">📈 互動率＆評分</div>
+  <div class="tab" onclick="show('treatment',this)">⚔️ 療程競爭圖</div>
+  <div class="tab" onclick="show('procon',this)">✅ 優點 ／ ❌ 缺點</div>
+  <div class="tab" onclick="show('recs',this)">💡 改善建議</div>
+  <div class="tab" onclick="show('action',this)">📌 結論＆行動</div>
+  <div class="tab" onclick="show('adlinks',this)">🔗 廣告庫直連</div>
+  <div class="tab" onclick="show('history',this)">📅 歷史週報</div>
+  <div class="tab" onclick="show('trend',this)">📉 長期趨勢</div>
+</div>
+
+<!-- TAB 1 -->
+<div id="overview" class="panel active">
+<div class="wrap">
+  <div class="sec ym">📊 本週 KPI 總覽（2026/08/21 – 08/28）</div>
+  <div class="kpi-row">
+    <div class="kpi ym"><div class="kv">4</div><div class="kl">悠美本週貼文數<br>（全數為 Reel 影音）</div></div>
+    <div class="kpi r"><div class="kv">1.25</div><div class="kl">悠美平均互動／篇<br>（讚＋留言）</div></div>
+    <div class="kpi"><div class="kv">3.2</div><div class="kl">星采星和平均互動／篇<br>（本週互動總量最高）</div></div>
+    <div class="kpi g"><div class="kv">6.0</div><div class="kl">英爵平均互動／篇<br>（本週單篇效率最高）</div></div>
+    <div class="kpi s"><div class="kv">0</div><div class="kl">悠美本週留言總數<br>（互動零對話）</div></div>
+  </div>
+
+  <div class="alert danger">
+    <div class="ico">🚨</div>
+    <div>
+      <strong>本週核心問題：發文有量、互動無聲</strong>
+      悠美本週發出 4 篇貼文（全為 Reel），總讚數 5、留言 0、分享 2。同期星采星和 5 篇貼文取得 16 讚，英爵 2 篇取得 12 讚。差距不在發文量，而在「留言誘因設計」──競業每篇貼文都埋入「留言關鍵字」機制，悠美本週 4 篇皆無此設計。
+    </div>
+  </div>
+
+  <div class="alert warn">
+    <div class="ico">⚠️</div>
+    <div>
+      <strong>資料完整度說明</strong>
+      本週透過 FB 情報來源成功取得官方帳號實測數據者共 <b>7 家</b>（悠美、星采星和、英爵 WBeauty、維格、元和雅、JC.young君綺漾、光澤診所）。其餘 37 家競業因來源端未能解析其粉專帳號或連線逾時，本週標記為「<b>待確認</b>」，不以推估值填補。
+    </div>
+  </div>
+
+  <div class="sec">📋 本週各家實測數據矩陣</div>
+  <table class="mtbl">
+    <thead><tr>
+      <th style="text-align:left;width:170px">診所</th><th>粉絲數</th><th>本週貼文</th>
+      <th>總讚數</th><th>總留言</th><th>總分享</th><th>平均互動／篇</th><th>主要素材</th>
+    </tr></thead>
+    <tbody>
+      <tr class="ym-row"><td class="cname">★ 悠美診所</td><td>30,000</td><td>4</td><td>5</td><td>0</td><td>2</td><td>1.25</td><td><tag class="b">Reel×4</tag></td></tr>
+      <tr><td class="cname">星采星和醫美</td><td>225,000</td><td>5</td><td>16</td><td>0</td><td>1</td><td>3.20</td><td><tag class="b">Reel×4</tag><tag class="gr">圖文×1</tag></td></tr>
+      <tr><td class="cname">英爵醫美 WBeauty</td><td>22,000</td><td>2</td><td>12</td><td>0</td><td>2</td><td>6.00</td><td><tag class="gr">圖文×1</tag><tag class="p">長文×1</tag></td></tr>
+      <tr><td class="cname">維格醫美</td><td>32,000</td><td>3</td><td>6</td><td>0</td><td>0</td><td>2.00</td><td><tag class="b">Reel×3</tag></td></tr>
+      <tr><td class="cname">JC.young 君綺漾</td><td>24,000</td><td>2</td><td>5</td><td>4</td><td>0</td><td>4.50</td><td><tag class="gr">圖文×2</tag></td></tr>
+      <tr><td class="cname">元和雅整形外科</td><td>168,000</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1.00</td><td><tag class="gr">圖文×1</tag></td></tr>
+      <tr><td class="cname">光澤診所（高雄博愛）</td><td>待確認</td><td>0</td><td>0</td><td>0</td><td>0</td><td>—</td><td><tag class="r">本週停更</tag></td></tr>
+      <tr><td class="cname" style="color:var(--muted)">其餘 37 家競業</td><td colspan="7" style="color:var(--muted)">待確認 ── 本週來源端未取得官方帳號資料，不以推估值填補</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec s">📅 悠美本週逐篇貼文明細</div>
+  <table class="mtbl">
+    <thead><tr>
+      <th style="text-align:left;width:90px">日期</th><th>格式</th><th style="text-align:left">療程主題</th>
+      <th>價格揭露</th><th>CTA 類型</th><th>醫師出鏡</th><th>讚</th><th>留言</th><th>分享</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>08/27</td><td><tag class="b">Reel</tag></td><td>音波拉提／術後水腫衛教</td><td><tag class="gr">未揭露</tag></td><td><tag class="r">無 CTA</tag></td><td><tag class="y">情境出鏡</tag></td><td>1</td><td>0</td><td>0</td></tr>
+      <tr><td>08/24</td><td><tag class="b">Reel</tag></td><td>犀利電波／新Q波（孫淑媚代言）</td><td><tag class="gr">需諮詢</tag></td><td><tag class="y">下方留言</tag></td><td><tag class="r">代言人</tag></td><td>1</td><td>0</td><td>1</td></tr>
+      <tr><td>08/24</td><td><tag class="b">Reel</tag></td><td>美國音波 2.0 極透／即時影像</td><td><tag class="gr">未揭露</tag></td><td><tag class="r">無 CTA</tag></td><td><tag class="g">醫師出鏡</tag></td><td>2</td><td>0</td><td>0</td></tr>
+      <tr><td>08/21</td><td><tag class="b">Reel</tag></td><td>犀利電波／新Q波（二選一互動）</td><td><tag class="gr">需諮詢</tag></td><td><tag class="y">下方留言</tag></td><td><tag class="r">代言人</tag></td><td>1</td><td>0</td><td>1</td></tr>
+    </tbody>
+  </table>
+  <div class="note">觀察：悠美本週 4 篇皆為 Reel，主題高度集中於「音波 × 電波」兩大能量療程。2 篇有導引留言字樣但未設定具體關鍵字，實際留言數為 0。</div>
+</div>
+</div>
+
+<!-- TAB 2 -->
+<div id="rivals" class="panel">
+<div class="wrap">
+  <div class="sec r">🔥 本週競業亮點拆解</div>
+
+  <div class="rec-list">
+    <div class="rec">
+      <div class="rn r">1</div>
+      <div class="rb">
+        <h3>星采星和｜醫師人格化短劇：「醫師失戀可以哭，客人的問題不能不回」</h3>
+        <p>08/23 貼文以盧建勳醫師「失戀 → 秒切專業模式」的反差短劇開場，帶入 Onda Pro 超微波療程三大賣點（12–15 分鐘、痛感低、三探頭），結尾要求留言「線條」。<b>單篇 6 讚，為本週所有競業單篇最高。</b></p>
+        <div class="tip">✅ 可借鏡：醫師具名 ＋ 情緒鉤子 ＋ 明確留言關鍵字，三件事在同一篇完成。</div>
+      </div>
+      <span class="pri p1">最高互動</span>
+    </div>
+
+    <div class="rec">
+      <div class="rn g">2</div>
+      <div class="rb">
+        <h3>英爵 WBeauty｜院長專欄長文：老化機轉 × 五大療程分類</h3>
+        <p>08/24 以李芳瑜醫師署名長文解析「氣球比喻」的老化機轉，並將非侵入式療程分為雷射／填充／能量拉提／肉毒／膚質五大類，附官網文章與媒體授權轉載連結。<b>單篇 10 讚、1 分享，平均互動 6.0／篇為本週最高效率。</b></p>
+        <div class="tip">✅ 可借鏡：以「知識體系」而非「單一療程」建立專業信任，並用官網文章接住流量。</div>
+      </div>
+      <span class="pri p1">效率最高</span>
+    </div>
+
+    <div class="rec">
+      <div class="rn t">3</div>
+      <div class="rb">
+        <h3>星采星和｜大巨蛋開球話題行銷（樂樂律師 × 中信兄弟）</h3>
+        <p>08/26 借勢中華職棒大巨蛋賽事，代言人開球現場即時發文，將品牌與體育賽事流量綁定，並同步露出「星誠細胞生醫」集團事業線。單篇 4 讚。</p>
+        <div class="tip">✅ 可借鏡：把代言人素材放進「有時效的大型公共事件」，而非只做棚拍。</div>
+      </div>
+      <span class="pri p2">話題操作</span>
+    </div>
+
+    <div class="rec">
+      <div class="rn g">4</div>
+      <div class="rb">
+        <h3>JC.young 君綺漾｜明碼標價 ＋ 週年檔期</h3>
+        <p>08/27「漾周年」檔期直接標示海芙音波 9999 價格，2 篇貼文取得 4 則留言，為本週唯一產生實際留言互動的競業。</p>
+        <div class="tip">✅ 可借鏡：價格透明化能顯著降低詢問門檻，直接把留言區變成詢價入口。</div>
+      </div>
+      <span class="pri p2">唯一有留言</span>
+    </div>
+
+    <div class="rec">
+      <div class="rn t">5</div>
+      <div class="rb">
+        <h3>維格醫美｜20 週年「專輯化」內容企劃</h3>
+        <p>將 10 組療程包裝成專輯 Track 01–10（《格式化》《盡情迷戀》《交織語》等），每則貼文即一首「單曲」，附完整衛部字號揭露。本週延續 3 篇。</p>
+        <div class="tip">✅ 可借鏡：用一個大型敘事框架串起整季內容，讓每篇貼文彼此加乘而非各自獨立。</div>
+      </div>
+      <span class="pri p3">內容框架</span>
+    </div>
+
+    <div class="rec">
+      <div class="rn r">6</div>
+      <div class="rb">
+        <h3>星采星和｜天災營運公告即時發布</h3>
+        <p>08/24 豪雨影響，逐店列出暫停營業門市並說明客服平台照常回覆。此類貼文雖互動低（1 讚），但顯著強化品牌可靠度與危機溝通形象。</p>
+        <div class="tip">✅ 可借鏡：把「營運透明度」也當成品牌內容的一環。</div>
+      </div>
+      <span class="pri p3">品牌信任</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 3 -->
+<div id="scores" class="panel">
+<div class="wrap">
+  <div class="sec">📈 本週互動表現比較</div>
+
+  <div class="bar-section">
+    <div class="bar-title">本週平均互動／篇（讚＋留言）</div>
+    <div class="bar-row"><div class="bar-name">英爵 WBeauty</div><div class="bar-track"><div class="bar-fill" style="width:92%;background:var(--sky)">6.0</div></div><div class="bar-val">6.0</div></div><div class="bar-row"><div class="bar-name">JC.young君綺漾</div><div class="bar-track"><div class="bar-fill" style="width:69%;background:var(--gold)">4.5</div></div><div class="bar-val">4.5</div></div><div class="bar-row"><div class="bar-name">星采星和醫美</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--red)">3.2</div></div><div class="bar-val">3.2</div></div><div class="bar-row"><div class="bar-name">維格醫美</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--rival)">2.0</div></div><div class="bar-val">2.0</div></div><div class="bar-row"><div class="bar-name ym">★ 悠美診所</div><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--youmei)">1.25</div></div><div class="bar-val">1.25</div></div><div class="bar-row"><div class="bar-name">元和雅整形外科</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--rival)">1.0</div></div><div class="bar-val">1.0</div></div>
+  </div>
+
+  <div class="bar-section">
+    <div class="bar-title">本週貼文則數</div>
+    <div class="bar-row"><div class="bar-name">星采星和醫美</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)">5</div></div><div class="bar-val">5</div></div><div class="bar-row"><div class="bar-name ym">★ 悠美診所</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--youmei)">4</div></div><div class="bar-val">4</div></div><div class="bar-row"><div class="bar-name">維格醫美</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--rival)">3</div></div><div class="bar-val">3</div></div><div class="bar-row"><div class="bar-name">英爵 WBeauty</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--sky)">2</div></div><div class="bar-val">2</div></div><div class="bar-row"><div class="bar-name">JC.young君綺漾</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--gold)">2</div></div><div class="bar-val">2</div></div><div class="bar-row"><div class="bar-name">元和雅整形外科</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--rival)">1</div></div><div class="bar-val">1</div></div>
+  </div>
+
+  <div class="bar-section">
+    <div class="bar-title">本週留言總數 ── 唯一產生對話的是君綺漾</div>
+    <div class="bar-row"><div class="bar-name">JC.young君綺漾</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--gold)">4</div></div><div class="bar-val">4</div></div><div class="bar-row"><div class="bar-name ym">★ 悠美診所</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--youmei)">0</div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-name">星采星和醫美</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--red)">0</div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-name">英爵 WBeauty</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--sky)">0</div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-name">維格醫美</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--rival)">0</div></div><div class="bar-val">0</div></div><div class="bar-row"><div class="bar-name">元和雅整形外科</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--rival)">0</div></div><div class="bar-val">0</div></div>
+    <div class="note">本週整體留言量都偏低，君綺漾的 4 則留言全部來自「明碼標價 ＋ 週年檔期」貼文，顯示價格資訊是最有效的留言觸發因子。</div>
+  </div>
+
+  <div class="sec g">⚡ 六維度策略評分（滿分 10）</div>
+  <div class="radar-grid">
+    <div class="radar-card" style="border-top:3px solid var(--youmei)"><h4 style="color:var(--youmei)">🏥 悠美診所</h4><div class="rc-row"><span class="rc-lbl">發文頻率</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">內容質感</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">互動能力</span><div class="rc-trk"><div class="rc-fil" style="width:30%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">3.0</span></div><div class="rc-row"><span class="rc-lbl">醫師KOL化</span><div class="rc-trk"><div class="rc-fil" style="width:50%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">5.0</span></div><div class="rc-row"><span class="rc-lbl">主題聚焦</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">CTA設計</span><div class="rc-trk"><div class="rc-fil" style="width:40%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">4.0</span></div><div class="rc-row"><span class="rc-lbl">廣告落地</span><div class="rc-trk"><div class="rc-fil" style="width:50%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">5.0</span></div><div style="margin-top:10px;padding-top:8px;border-top:2px solid var(--border);font-size:12px;font-weight:800;color:var(--youmei)">均分 5.71</div></div><div class="radar-card" style="border-top:3px solid #8B2111"><h4 style="color:#8B2111">🏆 星采星和（本週最強）</h4><div class="rc-row"><span class="rc-lbl">發文頻率</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">內容質感</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">互動能力</span><div class="rc-trk"><div class="rc-fil" style="width:60%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">6.0</span></div><div class="rc-row"><span class="rc-lbl">醫師KOL化</span><div class="rc-trk"><div class="rc-fil" style="width:90%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">9.0</span></div><div class="rc-row"><span class="rc-lbl">主題聚焦</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">CTA設計</span><div class="rc-trk"><div class="rc-fil" style="width:90%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">9.0</span></div><div class="rc-row"><span class="rc-lbl">廣告落地</span><div class="rc-trk"><div class="rc-fil" style="width:90%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">9.0</span></div><div style="margin-top:10px;padding-top:8px;border-top:2px solid var(--border);font-size:12px;font-weight:800;color:#8B2111">均分 8.00</div></div><div class="radar-card" style="border-top:3px solid var(--sky)"><h4 style="color:var(--sky)">🥇 英爵 WBeauty</h4><div class="rc-row"><span class="rc-lbl">發文頻率</span><div class="rc-trk"><div class="rc-fil" style="width:50%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">5.0</span></div><div class="rc-row"><span class="rc-lbl">內容質感</span><div class="rc-trk"><div class="rc-fil" style="width:90%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">9.0</span></div><div class="rc-row"><span class="rc-lbl">互動能力</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">醫師KOL化</span><div class="rc-trk"><div class="rc-fil" style="width:90%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">9.0</span></div><div class="rc-row"><span class="rc-lbl">主題聚焦</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">CTA設計</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">廣告落地</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div style="margin-top:10px;padding-top:8px;border-top:2px solid var(--border);font-size:12px;font-weight:800;color:var(--sky)">均分 7.29</div></div>
+  </div>
+  <div class="radar-grid">
+    <div class="radar-card" style="border-top:3px solid var(--rival)"><h4 style="color:var(--rival)">維格醫美</h4><div class="rc-row"><span class="rc-lbl">發文頻率</span><div class="rc-trk"><div class="rc-fil" style="width:60%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">6.0</span></div><div class="rc-row"><span class="rc-lbl">內容質感</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">互動能力</span><div class="rc-trk"><div class="rc-fil" style="width:40%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">4.0</span></div><div class="rc-row"><span class="rc-lbl">醫師KOL化</span><div class="rc-trk"><div class="rc-fil" style="width:40%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">4.0</span></div><div class="rc-row"><span class="rc-lbl">主題聚焦</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">CTA設計</span><div class="rc-trk"><div class="rc-fil" style="width:60%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">6.0</span></div><div class="rc-row"><span class="rc-lbl">廣告落地</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div style="margin-top:10px;padding-top:8px;border-top:2px solid var(--border);font-size:12px;font-weight:800;color:var(--rival)">均分 6.14</div></div><div class="radar-card" style="border-top:3px solid var(--gold)"><h4 style="color:var(--gold)">元和雅整形外科</h4><div class="rc-row"><span class="rc-lbl">發文頻率</span><div class="rc-trk"><div class="rc-fil" style="width:20%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">2.0</span></div><div class="rc-row"><span class="rc-lbl">內容質感</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">互動能力</span><div class="rc-trk"><div class="rc-fil" style="width:30%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">3.0</span></div><div class="rc-row"><span class="rc-lbl">醫師KOL化</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">主題聚焦</span><div class="rc-trk"><div class="rc-fil" style="width:60%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">6.0</span></div><div class="rc-row"><span class="rc-lbl">CTA設計</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">廣告落地</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div style="margin-top:10px;padding-top:8px;border-top:2px solid var(--border);font-size:12px;font-weight:800;color:var(--gold)">均分 5.86</div></div><div class="radar-card" style="border-top:3px solid var(--purple)"><h4 style="color:var(--purple)">JC.young 君綺漾</h4><div class="rc-row"><span class="rc-lbl">發文頻率</span><div class="rc-trk"><div class="rc-fil" style="width:50%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">5.0</span></div><div class="rc-row"><span class="rc-lbl">內容質感</span><div class="rc-trk"><div class="rc-fil" style="width:60%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">6.0</span></div><div class="rc-row"><span class="rc-lbl">互動能力</span><div class="rc-trk"><div class="rc-fil" style="width:50%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">5.0</span></div><div class="rc-row"><span class="rc-lbl">醫師KOL化</span><div class="rc-trk"><div class="rc-fil" style="width:30%;background:var(--red)"></div></div><span class="rc-val" style="color:var(--red)">3.0</span></div><div class="rc-row"><span class="rc-lbl">主題聚焦</span><div class="rc-trk"><div class="rc-fil" style="width:70%;background:var(--gold)"></div></div><span class="rc-val" style="color:var(--gold)">7.0</span></div><div class="rc-row"><span class="rc-lbl">CTA設計</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div class="rc-row"><span class="rc-lbl">廣告落地</span><div class="rc-trk"><div class="rc-fil" style="width:80%;background:var(--youmei)"></div></div><span class="rc-val" style="color:var(--youmei)">8.0</span></div><div style="margin-top:10px;padding-top:8px;border-top:2px solid var(--border);font-size:12px;font-weight:800;color:var(--purple)">均分 6.00</div></div>
+  </div>
+
+  <div class="alert info">
+    <div class="ico">📌</div>
+    <div>
+      <strong>評分落差解讀</strong>
+      悠美均分 5.71，本週最強競業星采星和 8.00，差距 2.29 分。差距最大的三項為「CTA 設計」（4 vs 9）、「互動能力」（3 vs 6）、「醫師 KOL 化」（5 vs 9）；而「內容質感」（8 vs 8）與「主題聚焦」（8 vs 7）悠美其實不落後，代表問題出在轉換設計而非內容製作。
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 4 -->
+<div id="treatment" class="panel">
+<div class="wrap">
+  <div class="sec s">⚔️ 本週療程競爭地圖</div>
+  <div class="note">依本週實際貼文內容統計各家主推療程，僅列出本週有實際發文的診所。</div>
+
+  <table class="mtbl">
+    <thead><tr>
+      <th style="text-align:left;width:150px">療程類別</th>
+      <th class="ym">悠美</th><th>星采星和</th><th>英爵</th><th>維格</th><th>君綺漾</th><th>元和雅</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="cname">音波拉提</td><td><tag class="g">主推×2</tag></td><td><tag class="y">方案價 3300</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="g">主推 9999</tag></td><td><tag class="gr">—</tag></td></tr>
+      <tr><td class="cname">電波（緊緻拉提）</td><td><tag class="g">主推×2</tag></td><td><tag class="g">主推×2</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td></tr>
+      <tr><td class="cname">肉毒／填充微整</td><td><tag class="gr">—</tag></td><td><tag class="b">眼口周方案</tag></td><td><tag class="b">知識文帶入</tag></td><td><tag class="b">Emface+肉毒</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td></tr>
+      <tr><td class="cname">體態雕塑／減脂</td><td><tag class="gr">上週已發</tag></td><td><tag class="b">Onda Pro</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td></tr>
+      <tr><td class="cname">膚質管理／保養</td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="g">院長QA主推</tag></td><td><tag class="g">EMFUSION</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td></tr>
+      <tr><td class="cname">痘痘／痘疤治療</td><td><tag class="gr">上週已發</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="b">AviClear</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td></tr>
+      <tr><td class="cname">整形外科手術</td><td><tag class="r">未經營</tag></td><td><tag class="r">未經營</tag></td><td><tag class="r">未經營</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="g">提乳／胸部</tag></td></tr>
+      <tr><td class="cname">品牌／營運公告</td><td><tag class="gr">—</tag></td><td><tag class="g">颱風公告＋開球</tag></td><td><tag class="gr">—</tag></td><td><tag class="gr">—</tag></td><td><tag class="b">週年檔期</tag></td><td><tag class="gr">—</tag></td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert warn">
+    <div class="ico">⚔️</div>
+    <div>
+      <strong>直接對打的紅海：音波與電波</strong>
+      悠美本週 4 篇有 4 篇落在音波／電波，而君綺漾以「海芙音波 9999」、星采星和以「音波拉提 3300」明碼標價正面搶奪同一批搜尋族群。悠美在同一賽道上未揭露任何價格區間，價格敏感族群無從比較。
+    </div>
+  </div>
+
+  <div class="alert ok">
+    <div class="ico">🟢</div>
+    <div>
+      <strong>本週無人競爭的藍海：多汗症與私密／體態長線內容</strong>
+      本週 6 家競業無一觸及 miraDry 清新微波、EMSCULPT NEO 等主題。悠美上週已有相關素材，本週卻讓位給紅海療程，等於主動放棄唯一低競爭的差異化題材。
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 5 -->
+<div id="procon" class="panel">
+<div class="wrap">
+  <div class="sec ym">✅ 優點 ／ ❌ 缺點（本週實測）</div>
+  <div class="pc-grid">
+    <div class="pc-card" style="border-top:3px solid var(--youmei)">
+      <h3 style="color:var(--youmei)">✅ 本週優點</h3>
+      <ul>
+        <li><span class="dot g">1</span><div><b>發文節奏穩定</b>：本週 4 篇，僅次於星采星和的 5 篇，高於英爵、君綺漾、元和雅。</div></li>
+        <li><span class="dot g">2</span><div><b>影音化程度最高</b>：4 篇全為 Reel，是本週唯一 100% 影音的品牌，符合平台演算法傾向。</div></li>
+        <li><span class="dot g">3</span><div><b>主題聚焦度佳</b>：音波與電波兩條主線清楚，未出現主題發散。</div></li>
+        <li><span class="dot g">4</span><div><b>文案調性統一</b>：「美沒有標準，只有選擇」的品牌語感在每篇一致，質感高於君綺漾的促銷式文案。</div></li>
+        <li><span class="dot g">5</span><div><b>代言人資產已就位</b>：孫淑媚素材本週貢獻 2 篇，且是本週唯二產生分享的內容。</div></li>
+        <li><span class="dot g">6</span><div><b>醫師觀點內容已起步</b>：08/24「醫師透視美國音波 2.0」為本週悠美單篇最高讚數（2 讚）。</div></li>
+      </ul>
+    </div>
+    <div class="pc-card" style="border-top:3px solid var(--red)">
+      <h3 style="color:var(--red)">❌ 本週缺點</h3>
+      <ul>
+        <li><span class="dot r">1</span><div><b>留言數掛零</b>：4 篇貼文 0 則留言，君綺漾僅 2 篇即取得 4 則留言。</div></li>
+        <li><span class="dot r">2</span><div><b>CTA 形同虛設</b>：2 篇寫「下方留言」卻未指定關鍵字，競業則明確指定「線條」「魚尾紋」「星和」。</div></li>
+        <li><span class="dot r">3</span><div><b>無 LINE 導流連結</b>：星采星和、英爵、君綺漾每篇都有 LINE 短網址；悠美本週 4 篇皆無。</div></li>
+        <li><span class="dot r">4</span><div><b>無成效追蹤短網址</b>：競業使用 starclinic.pse.is、jc-young.com 可回推轉換，悠美無法歸因。</div></li>
+        <li><span class="dot r">5</span><div><b>醫師未具名</b>：悠美影片中醫師出鏡但無姓名與職稱，難以累積個人品牌資產。</div></li>
+        <li><span class="dot r">6</span><div><b>價格完全不透明</b>：本週 4 篇零價格資訊，在音波紅海中喪失比價入口。</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 6 -->
+<div id="recs" class="panel">
+<div class="wrap">
+  <div class="sec g">💡 改善建議（依優先級）</div>
+  <div class="rec-list">
+
+    <div class="rec"><div class="rn r">1</div><div class="rb">
+      <h3>每篇貼文指定一個「留言關鍵字」</h3>
+      <p>本週悠美 2 篇寫了「下方留言」但沒告訴讀者要留什麼，留言數為 0。星采星和同期 3 篇分別指定「線條」「魚尾紋」「星和」。這是零成本、下週即可執行的改動。</p>
+      <div class="tip">執行方式：文末固定格式「留言【關鍵字】，﹍﹍」，並預先備妥自動回覆話術。目標：下週留言數從 0 提升至 8 則以上。</div>
+    </div><span class="pri p1">P1</span></div>
+
+    <div class="rec"><div class="rn r">2</div><div class="rb">
+      <h3>建立 LINE 短網址導流標準模組</h3>
+      <p>悠美本週僅出現 0800 電話，缺乏可點擊的即時諮詢入口。競業每篇都掛 LINE 連結，且使用可追蹤短網址。</p>
+      <div class="tip">執行方式：建立固定頁尾三行（LINE 加好友短網址／官網療程頁／0800 專線），所有貼文一律套用，並以 UTM 或短網址服務回報點擊數。</div>
+    </div><span class="pri p1">P1</span></div>
+
+    <div class="rec"><div class="rn r">3</div><div class="rb">
+      <h3>醫師具名化：每支 Reel 標註「◯◯◯醫師」</h3>
+      <p>悠美 08/24 醫師出鏡篇是本週自家最高讚數，但影片與文案皆未具名。星采星和「盧建勳醫師」、英爵「李芳瑜醫師／黃逸明醫師」皆已把醫師當成長期資產經營，其醫師具名篇亦為該品牌本週最高互動。</p>
+      <div class="tip">執行方式：文案首行加入醫師姓名與專科，畫面下三分之一加姓名字卡；同一位醫師固定經營一條療程線。</div>
+    </div><span class="pri p1">P1</span></div>
+
+    <div class="rec"><div class="rn g">4</div><div class="rb">
+      <h3>導入「明碼標價」檔期貼文，每週至少一篇</h3>
+      <p>本週唯一產生留言的競業是明碼標價的君綺漾（海芙音波 9999）。星采星和亦以 1100／3300 三段式方案價操作。悠美本週零價格揭露。</p>
+      <div class="tip">執行方式：每週固定一篇「本週方案」貼文，揭露入門價或起跳價，其餘品牌形象篇維持現有調性，避免整體促銷化。</div>
+    </div><span class="pri p2">P2</span></div>
+
+    <div class="rec"><div class="rn g">5</div><div class="rb">
+      <h3>把代言人素材放進「有時效的公共事件」</h3>
+      <p>星采星和把代言人送上大巨蛋開球，借勢職棒賽事流量。悠美的孫淑媚素材本週仍停留在棚拍訪談，雖有分享數但缺乏外部話題乘數。</p>
+      <div class="tip">執行方式：盤點 9–10 月可借勢節點（中秋、金鐘、演唱會檔期），提前規劃代言人現地素材。</div>
+    </div><span class="pri p2">P2</span></div>
+
+    <div class="rec"><div class="rn t">6</div><div class="rb">
+      <h3>重新啟用差異化題材：miraDry 與 EMSCULPT NEO</h3>
+      <p>本週 6 家競業無一觸及多汗症與增肌減脂題材，屬完全無競爭的藍海；悠美已有素材資產卻本週未投放。</p>
+      <div class="tip">執行方式：音波電波維持每週 2 篇，另撥 1–2 篇給差異化療程，避免全部押注紅海。</div>
+    </div><span class="pri p3">P3</span></div>
+
+    <div class="rec"><div class="rn t">7</div><div class="rb">
+      <h3>建立「知識體系」長文，接住官網流量</h3>
+      <p>英爵以院長署名長文（老化機轉 × 五大療程分類）取得本週最高單篇效率 10 讚，並導向官網文章頁。這類內容同時具備 SEO 與信任建立雙重效益。</p>
+      <div class="tip">執行方式：每月一篇醫師署名深度長文，同步發佈於官網部落格，FB 貼文只放摘要與連結。</div>
+    </div><span class="pri p3">P3</span></div>
+
+    <div class="rec"><div class="rn t">8</div><div class="rb">
+      <h3>補齊競業帳號清單，提升情報覆蓋率</h3>
+      <p>本週 43 家競業僅 6 家取得實測數據，覆蓋率 14%。主因是多數診所的 FB 粉專帳號代碼未建檔，僅能靠關鍵字搜尋，命中率低。</p>
+      <div class="tip">執行方式：一次性人工建立「診所名稱 → FB page_id」對照表存檔，後續每週即可直接以 page_id 抓取，覆蓋率可望提升至 80% 以上。</div>
+    </div><span class="pri p3">P3</span></div>
+
+  </div>
+</div>
+</div>
+
+<!-- TAB 7 -->
+<div id="action" class="panel">
+<div class="wrap">
+  <div class="sec">📌 本週結論</div>
+  <div class="alert danger"><div class="ico">🎯</div><div>
+    <strong>結論一：悠美不是內容不好，是沒有設計轉換</strong>
+    六維度中「內容質感」8 分與星采星和並駕齊驅、「主題聚焦」8 分甚至更高，但「CTA 設計」僅 4 分（競業 9 分）。本週 4 篇貼文帶來 0 則留言、0 個可追蹤點擊，等於內容成本全數沉沒。
+  </div></div>
+  <div class="alert warn"><div class="ico">📉</div><div>
+    <strong>結論二：在音波紅海裡是唯一不談價格的一家</strong>
+    君綺漾 9999、星采星和 3300 都在同一週用價格搶同一批人，悠美 4 篇零價格資訊，等於把比價階段的客戶直接讓出。
+  </div></div>
+  <div class="alert info"><div class="ico">👨‍⚕️</div><div>
+    <strong>結論三：醫師資產尚未開始累積</strong>
+    悠美本週自家最高互動來自醫師出鏡篇，但醫師未具名；競業已把醫師姓名做成可搜尋、可累積的個人品牌。這是差距會逐週擴大的一項。
+  </div></div>
+
+  <div class="sec ym">✅ 下週行動清單</div>
+  <table class="mtbl">
+    <thead><tr><th style="width:50px">#</th><th style="text-align:left">行動項目</th><th>負責面向</th><th>本週基準</th><th>下週目標</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td style="text-align:left">每篇貼文文末加入指定留言關鍵字</td><td><tag class="r">社群文案</tag></td><td>留言 0 則</td><td>留言 ≥ 8 則</td></tr>
+      <tr><td>2</td><td style="text-align:left">建立 LINE／官網／0800 三行標準頁尾</td><td><tag class="b">導流設計</tag></td><td>0 篇有連結</td><td>4/4 篇皆有</td></tr>
+      <tr><td>3</td><td style="text-align:left">Reel 加入醫師姓名字卡與文案署名</td><td><tag class="p">醫師品牌</tag></td><td>0 篇具名</td><td>≥ 2 篇具名</td></tr>
+      <tr><td>4</td><td style="text-align:left">推出一篇明碼標價「本週方案」貼文</td><td><tag class="y">檔期操作</tag></td><td>0 篇有價格</td><td>1 篇有價格</td></tr>
+      <tr><td>5</td><td style="text-align:left">安排 1 篇 miraDry 或 EMSCULPT NEO 差異化題材</td><td><tag class="g">藍海題材</tag></td><td>0 篇</td><td>1 篇</td></tr>
+      <tr><td>6</td><td style="text-align:left">建立競業 FB page_id 對照表</td><td><tag class="gr">情報建置</tag></td><td>覆蓋 6/43</td><td>覆蓋 ≥ 30/43</td></tr>
+      <tr><td>7</td><td style="text-align:left">導入可追蹤短網址，回報每篇點擊數</td><td><tag class="b">成效歸因</tag></td><td>無法歸因</td><td>逐篇可歸因</td></tr>
+    </tbody>
+  </table>
+  <div class="note">量化目標：下週平均互動／篇由 1.25 提升至 3.0 以上（追平本週星采星和水準），六維度均分由 5.71 提升至 6.5 以上。</div>
+</div>
+</div>
+
+<!-- TAB 8 -->
+<div id="adlinks" class="panel">
+<div class="wrap">
+  <div class="sec s">🔗 Meta 廣告檔案庫直連</div>
+  <div class="note">點擊即可開啟該粉專在 Meta 廣告檔案庫（台灣）的所有活躍廣告，依曝光量排序。以下僅列出本週已確認 page_id 的帳號。</div>
+  <table class="mtbl">
+    <thead><tr><th style="text-align:left;width:200px">診所</th><th>FB page_id</th><th>粉絲數</th><th>本週貼文</th><th>廣告庫</th></tr></thead>
+    <tbody>
+      <tr class="ym-row"><td class="cname">★ 悠美診所</td><td>100064818847669</td><td>30,000</td><td>4</td><td><a class="adlink ym" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100064818847669&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">星采星和醫美</td><td>100064378791385</td><td>225,000</td><td>5</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100064378791385&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">元和雅整形外科</td><td>100064558665313</td><td>168,000</td><td>1</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100064558665313&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">維格醫美</td><td>100064709197391</td><td>32,000</td><td>3</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100064709197391&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">英爵醫美 WBeauty</td><td>100064347715649</td><td>22,000</td><td>2</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100064347715649&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">JC.young 君綺漾</td><td>100065031392636</td><td>24,000</td><td>2</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100065031392636&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">光澤診所（高雄博愛）</td><td>100063818323352</td><td>待確認</td><td>0</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=100063818323352&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+      <tr><td class="cname">光澤診所（新竹巨城）</td><td>61577603251825</td><td>待確認</td><td>待確認</td><td><a class="adlink" target="_blank" href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=TW&view_all_page_id=61577603251825&search_type=page&sort_data[mode]=total_impressions&sort_data[direction]=desc">查↗</a></td></tr>
+    </tbody>
+  </table>
+  <div class="alert warn"><div class="ico">📇</div><div>
+    <strong>待確認名單（37 家）</strong>
+    米蘭時尚、淨妍醫美、盡是為妳、晶鑽、椛兒、生活家醫美、美力時尚、粹究美學、聖宜、聖緹雅、原美學、璞之妍、越L'EXCELLENCE、恆美學、芮態、霍普金斯、法喬、美加醫美、凡登整形、琢美妍、御美妍、巧之妍、煥儷、玉妍美、林亮辰皮膚、彭賢禮皮膚科、朝沐和安、林政賢皮膚科、達昇美上美、尼斯、安穆美學、玉貴人整形、優越、守葳Sowell、韓娜斯、萊可美學、佳思優整形醫美。
+    建議一次性建立 page_id 對照表後納入每週自動蒐集。
+  </div></div>
+</div>
+</div>
+
+<!-- TAB 9 -->
+<div id="history" class="panel">
+<div class="wrap">
+  <h2 style="font-size:16px;font-weight:900;color:var(--rival);margin-bottom:14px">📅 歷史週報</h2>
+  <p id="hist-loading">載入中...</p>
+  <ul id="hist-list" style="line-height:2.2;font-size:1.05rem"></ul>
+</div>
+</div>
+
+<!-- TAB 10 -->
+<div id="trend" class="panel">
+<div class="wrap">
+  <h2 style="font-size:16px;font-weight:900;color:var(--rival);margin-bottom:14px">📉 長期趨勢</h2>
+  <p id="trend-loading">載入中...</p>
+  <div class="chart-wrap"><canvas id="chart-followers" style="max-height:260px;margin-bottom:2rem"></canvas></div>
+  <div class="chart-wrap"><canvas id="chart-score" style="max-height:260px"></canvas></div>
+</div>
+</div>
+
+<footer>
+  悠美診所 ▎FB 廣告競業情報週報｜分析期間 2026/08/21 – 2026/08/28｜資料來源：Facebook 公開粉專實測抓取<br>
+  本週成功蒐集 7 家，待確認 37 家。所有數字皆為當週實抓值，未使用推估或沿用歷史資料。
+</footer>
+
+<script>
+function show(id, el){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+<script>
+fetch('https://isekai3kidsdaddy.github.io/youmei-fb-report/data.json')
+  .then(r=>r.json()).then(d=>{
+    document.getElementById('hist-loading').style.display='none';
+    const ul=document.getElementById('hist-list');
+    (d.archives||[]).forEach(a=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<a href="https://isekai3kidsdaddy.github.io/youmei-fb-report/${a.url}" target="_blank" style="color:var(--youmei)">📄 ${a.date}（${a.period}）週報</a>`;
+      ul.appendChild(li);
+    });
+    if(!ul.children.length) ul.innerHTML='<li>尚無歷史資料，下週起自動累積</li>';
+  }).catch(()=>document.getElementById('hist-loading').textContent='暫無歷史資料');
+</script>
+
+<script>
+fetch('https://isekai3kidsdaddy.github.io/youmei-fb-report/data.json')
+  .then(r=>r.json()).then(d=>{
+    document.getElementById('trend-loading').style.display='none';
+    const t=(d.trends||[]).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!t.length){document.getElementById('trend-loading').textContent='尚無趨勢資料，下週起自動累積';return;}
+    const labels=t.map(x=>x.period||x.date);
+    new Chart(document.getElementById('chart-followers'),{
+      type:'line',
+      data:{labels,datasets:[{label:'悠美粉絲數',data:t.map(x=>x.youmei_followers),borderColor:'#0E7C60',backgroundColor:'rgba(14,124,96,0.1)',tension:0.3,fill:true}]},
+      options:{plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:false}}}
+    });
+    new Chart(document.getElementById('chart-score'),{
+      type:'line',
+      data:{labels,datasets:[
+        {label:'悠美六維度均分',data:t.map(x=>x.youmei_score),borderColor:'#0E7C60',tension:0.3},
+        {label:'本週最強競業均分',data:t.map(x=>x.top_rival_score),borderColor:'#8B2111',tension:0.3}
+      ]},
+      options:{plugins:{legend:{position:'top'}},scales:{y:{min:0,max:10}}}
+    });
+  }).catch(()=>document.getElementById('trend-loading').textContent='暫無趨勢資料');
+</script>
+
+</body>
+</html>
