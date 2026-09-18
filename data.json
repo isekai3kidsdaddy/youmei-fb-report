@@ -1,6 +1,11 @@
 {
   "archives": [
     {
+      "date": "2026-09-18",
+      "period": "0911-0918",
+      "url": "archive/2026-09-18.html"
+    },
+    {
       "date": "2026-09-11",
       "period": "0904-0911",
       "url": "archive/2026-09-11.html"
@@ -145,6 +150,17 @@
       "top_rival_score": 7.5,
       "competitors_collected": 13,
       "date": "2026-09-11"
+    },
+    {
+      "period": "0911-0918",
+      "youmei_followers": 30488,
+      "youmei_posts": 6,
+      "youmei_avg_engagement": 0.5,
+      "youmei_score": 5,
+      "top_rival": "佳思優",
+      "top_rival_score": 8.5,
+      "competitors_collected": 11,
+      "date": "2026-09-18"
     }
   ]
 }
