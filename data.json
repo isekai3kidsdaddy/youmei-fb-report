@@ -1,6 +1,16 @@
 {
   "archives": [
     {
+      "date": "2026-10-02",
+      "period": "0925-1002",
+      "url": "archive/2026-10-02.html"
+    },
+    {
+      "date": "2026-09-25",
+      "period": "0918-0924",
+      "url": "archive/2026-09-25.html"
+    },
+    {
       "date": "2026-09-18",
       "period": "0911-0918",
       "url": "archive/2026-09-18.html"
@@ -59,7 +69,7 @@
       "youmei_posts": 5,
       "youmei_avg_engagement": 2.6,
       "youmei_score": 6,
-      "top_rival": "æéæåé«ç¾",
+      "top_rival": "æéæåé«ç¾",
       "top_rival_score": 7.2,
       "competitors_collected": 4
     },
@@ -69,7 +79,7 @@
       "youmei_posts": 4,
       "youmei_avg_engagement": 4,
       "youmei_score": 6.1,
-      "top_rival": "æéæåé«ç¾",
+      "top_rival": "æéæåé«ç¾",
       "top_rival_score": 8.4,
       "competitors_collected": 4,
       "date": "2026-07-17"
@@ -161,6 +171,96 @@
       "top_rival_score": 8.5,
       "competitors_collected": 11,
       "date": "2026-09-18"
+    },
+    {
+      "date": "2026-09-25",
+      "period": "0918-0924",
+      "youmei_followers": null,
+      "youmei_posts": 3,
+      "youmei_avg_engagement": 5.67,
+      "youmei_engagement_rate": null,
+      "youmei_score": null,
+      "top_rival": "朝沐和安",
+      "top_rival_score": null,
+      "competitors_collected": 20,
+      "backfill": true,
+      "note": "回補：以10/2當日抓取之近期貼文回推9/18-9/24；粉絲數與評分未取得歷史值，故為null"
+    },
+    {
+      "period": "0925-1002",
+      "youmei_followers": 30472,
+      "youmei_posts": 4,
+      "youmei_avg_engagement": 0.667,
+      "youmei_engagement_rate": 0.0022,
+      "youmei_score": 4.5,
+      "top_rival": "佳思優整形醫美",
+      "top_rival_score": 7.12,
+      "competitors_collected": 38,
+      "competitors_total": 39,
+      "competitor_fans": {
+        "星采星和": 225286,
+        "元和雅整形外科": 168658,
+        "英爵醫美": 22454,
+        "君綺醫美": 146620,
+        "君綺漾": 24329,
+        "佳思優整形醫美": 2752,
+        "維格醫療集團": 32480,
+        "米蘭時尚": 114390,
+        "淨妍醫美(含盡是為妳)": 98928,
+        "聖宜診所": 114746,
+        "藝群醫學美容集團": 61552,
+        "璞之妍 Essenangelo": 20975,
+        "越 L'EXCELLENCE": 12547,
+        "粹究美學": 8862,
+        "奈思診所": 51065,
+        "鉑金美醫 Birkin": 15166,
+        "美加醫美": 6477,
+        "聖緹雅醫美皮膚科": 24199,
+        "美麗線時尚診所": 27226,
+        "光澤診所": 14817,
+        "晶鑽診所": 98076,
+        "法喬醫美": 98238,
+        "美力時尚(站前)": 5783,
+        "萊佳形象美學": 29689,
+        "御美妍": 13322,
+        "朝沐和安": 1456,
+        "恆美學": 13332,
+        "尼斯診所": 35874,
+        "守葳診所": 3135,
+        "優越診所": 2565,
+        "韓娜斯": 3601,
+        "愛爾麗竹北": 1422,
+        "原美學": null,
+        "琢美妍": 2978,
+        "生活家": 3942,
+        "萊可美學": 4908,
+        "芮態診所": 6719,
+        "達昇美上美": 31679,
+        "椛兒診所": 427
+      },
+      "regions": {
+        "taipei": {
+          "n": 32,
+          "er_median": 0.0076,
+          "youmei_er": 0.0022
+        },
+        "taoyuan": {
+          "n": 8,
+          "er_median": 0.0031,
+          "youmei_er": 0.0022
+        },
+        "hsinchu_zhubei": {
+          "n": 15,
+          "er_median": 0.0122,
+          "youmei_er": 0.0022
+        },
+        "taichung": {
+          "n": 21,
+          "er_median": 0.0059,
+          "youmei_er": 0.0022
+        }
+      },
+      "date": "2026-10-02"
     }
   ]
 }
