@@ -515,10 +515,10 @@
     {
       "period": "1023-1030",
       "youmei_followers": 30460,
-      "youmei_posts": null,
-      "youmei_avg_engagement": null,
-      "youmei_engagement_rate": null,
-      "youmei_score": null,
+      "youmei_posts": 1,
+      "youmei_avg_engagement": 1.0,
+      "youmei_engagement_rate": 0.0033,
+      "youmei_score": 5.13,
       "top_rival": "優越診所",
       "top_rival_score": null,
       "competitors_collected": 38,
@@ -566,24 +566,24 @@
       },
       "regions": {
         "taipei": {
-          "n": 15,
+          "n": 16,
           "er_median": 0.0089,
-          "youmei_er": null
+          "youmei_er": 0.0033
         },
         "taoyuan": {
           "n": 5,
           "er_median": 0.0044,
-          "youmei_er": null
+          "youmei_er": 0.0033
         },
         "hsinchu_zhubei": {
-          "n": 8,
-          "er_median": 0.0121,
-          "youmei_er": null
+          "n": 9,
+          "er_median": 0.0153,
+          "youmei_er": 0.0033
         },
         "taichung": {
-          "n": 8,
-          "er_median": 0.0194,
-          "youmei_er": null
+          "n": 9,
+          "er_median": 0.0208,
+          "youmei_er": 0.0033
         }
       },
       "industry_items": 5,
