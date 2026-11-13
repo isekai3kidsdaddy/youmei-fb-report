@@ -1,78 +1,78 @@
 {
-  "period": "1030-1106",
-  "youmei_followers": 30451,
-  "youmei_posts": 5,
-  "youmei_avg_engagement": 0.6,
-  "youmei_engagement_rate": 0.002,
-  "youmei_score": 5.32,
-  "top_rival": "韓娜斯",
+  "period": "1106-1113",
+  "youmei_followers": 30446,
+  "youmei_posts": 4,
+  "youmei_avg_engagement": null,
+  "youmei_engagement_rate": null,
+  "youmei_score": null,
+  "top_rival": null,
   "top_rival_score": null,
-  "competitors_collected": 38,
+  "competitors_collected": 36,
   "competitors_total": 39,
   "competitor_fans": {
-    "椛兒": 431,
-    "璞之妍 Essenangelo": 21014,
-    "奈思診所": 50991,
-    "佳思優整形醫美": 3006,
-    "美力時尚(站前)": 6002,
-    "星采星和": 225277,
-    "元和雅整形外科": 168380,
-    "英爵醫美": 22479,
-    "君綺醫美": 146969,
-    "君綺漾": 24432,
-    "維格醫療集團": 32435,
-    "米蘭時尚": 114506,
-    "淨妍醫美(含盡是為妳)": 98981,
-    "聖宜診所": 115064,
-    "藝群醫學美容集團": 61792,
-    "越 L'EXCELLENCE": 12774,
+    "椛兒": null,
+    "璞之妍 Essenangelo": 21018,
+    "奈思診所": 50959,
+    "佳思優整形醫美": 3056,
+    "美力時尚(站前)": 6041,
+    "星采星和": 225252,
+    "元和雅整形外科": null,
+    "英爵醫美": 22482,
+    "君綺醫美": 147058,
+    "君綺漾": 24444,
+    "維格醫療集團": 32431,
+    "米蘭時尚": 114525,
+    "淨妍醫美(含盡是為妳)": 99001,
+    "聖宜診所": 115106,
+    "藝群醫學美容集團": 61834,
+    "越 L'EXCELLENCE": 12808,
     "粹究美學": 8905,
-    "鉑金美醫 Birkin": 15247,
-    "美加醫美": 6829,
-    "聖緹雅醫美皮膚科": 24188,
-    "美麗線時尚診所": 27320,
-    "光澤診所": 14797,
-    "晶鑽診所": 97992,
-    "法喬醫美": 98129,
-    "萊佳形象美學": 29864,
-    "御美妍": 13539,
-    "朝沐和安": 1535,
-    "恆美學": 13604,
-    "尼斯診所": 36086,
-    "守葳診所": 3227,
-    "優越診所": 2606,
-    "韓娜斯": 3619,
-    "愛爾麗竹北": 1496,
+    "鉑金美醫 Birkin": 15261,
+    "美加醫美": 6877,
+    "聖緹雅醫美皮膚科": 24186,
+    "美麗線時尚診所": 27339,
+    "光澤診所": 14796,
+    "晶鑽診所": 97956,
+    "法喬醫美": 98104,
+    "萊佳形象美學": 29935,
+    "御美妍": 13577,
+    "朝沐和安": 1542,
+    "恆美學": 13663,
+    "尼斯診所": 36094,
+    "守葳診所": 3242,
+    "優越診所": 2610,
+    "韓娜斯": 3618,
+    "愛爾麗竹北": 1500,
     "原美學": null,
-    "琢美妍": 3038,
-    "生活家": 3966,
-    "萊可美學": 4905,
-    "芮態診所": 6801,
-    "達昇美上美": 32100
+    "琢美妍": 3043,
+    "生活家": 3971,
+    "萊可美學": 4903,
+    "芮態診所": 6807,
+    "達昇美上美": 32123
   },
   "regions": {
     "taipei": {
-      "n": 15,
-      "er_median": 0.0077,
-      "youmei_er": 0.002
+      "n": 0,
+      "er_median": null,
+      "youmei_er": null
     },
     "taoyuan": {
-      "n": 6,
-      "er_median": 0.0058,
-      "youmei_er": 0.002
+      "n": 0,
+      "er_median": null,
+      "youmei_er": null
     },
     "hsinchu_zhubei": {
-      "n": 10,
-      "er_median": 0.0137,
-      "youmei_er": 0.002
+      "n": 0,
+      "er_median": null,
+      "youmei_er": null
     },
     "taichung": {
-      "n": 10,
-      "er_median": 0.0073,
-      "youmei_er": 0.002
+      "n": 0,
+      "er_median": null,
+      "youmei_er": null
     }
   },
-  "industry_items": 5,
+  "industry_items": 8,
   "google_reviews": {
     "市府": 64,
     "桃園": 98,
@@ -86,5 +86,37 @@
     "新竹": 4.8,
     "竹北": 4.7,
     "台中": 4.7
+  },
+  "data_issue": "FB get_page/get_page_posts/get_post 故障；粉絲改用廣告檔案庫 likeCount，貼文僅 Reels（無讚留言），FB 互動率待確認",
+  "youmei_posts_flag": "reels_only",
+  "youmei_fb_reel_views": 2160,
+  "youmei_branches_fb": {
+    "桃園": {
+      "fans": 15245,
+      "reels": 1
+    },
+    "新竹": {
+      "fans": 933,
+      "reels": 1
+    },
+    "竹北": {
+      "fans": 363,
+      "reels": 1
+    },
+    "台中": {
+      "fans": 247,
+      "reels": 1
+    }
+  },
+  "ig_youmei": {
+    "followers": 13222,
+    "posts": 1,
+    "avg_engagement": 1.0,
+    "er": 0.0076
+  },
+  "six_dim_best": {
+    "clinic": "奈思診所",
+    "score": 6.3,
+    "basis": "IG 口徑"
   }
 }
